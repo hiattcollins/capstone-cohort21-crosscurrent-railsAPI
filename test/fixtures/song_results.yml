@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  query_id: 1
+  artist: MyText
+  song_name: MyText
+  album: MyText
+  ISRC: MyText
+
+two:
+  query_id: 1
+  artist: MyText
+  song_name: MyText
+  album: MyText
+  ISRC: MyText

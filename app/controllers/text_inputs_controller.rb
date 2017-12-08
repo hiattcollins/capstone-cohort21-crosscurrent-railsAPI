@@ -1,0 +1,2 @@
+class TextInputsController < ApplicationController
+end
