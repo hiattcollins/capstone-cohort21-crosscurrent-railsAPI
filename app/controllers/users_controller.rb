@@ -7,7 +7,6 @@ class UsersController < ApplicationController
     render json: @users
   end
 
-
   def show
     set_user
     render json: @user
@@ -21,7 +20,15 @@ class UsersController < ApplicationController
       else
         render json: @user.errors, staus: :unprocessable_entity
     end
+  end
 
+  def update
+    set_user
+    if @user.update(user_params)
+      redirect_to @user
+    else
+      render 'edit'
+    end
   end
 
 
