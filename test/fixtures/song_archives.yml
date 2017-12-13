@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  song: MyText
+  artist: MyText
+  year: 1
+  lyrics: MyText
+  sadness: 1.5
+  joy: 1.5
+  fear: 1.5
+  disgust: 1.5
+  anger: 1.5
+
+two:
+  song: MyText
+  artist: MyText
+  year: 1
+  lyrics: MyText
+  sadness: 1.5
+  joy: 1.5
+  fear: 1.5
+  disgust: 1.5
+  anger: 1.5
