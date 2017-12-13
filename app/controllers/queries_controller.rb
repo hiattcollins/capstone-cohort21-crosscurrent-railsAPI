@@ -7,13 +7,50 @@ class QueriesController < ApplicationController
     render json: @queries
   end
 
+  def text_query
+
+    @user_id = query_params["user_id"]
+    @query = Query.new(:user_id => @user_id)
+
+    @query_id = nil
+
+    if @query.save
+        # render json: @query, status: :created, location: @query
+        # query_hash = JSON.parse(@query)
+        @query_id = @query["id"]
+      else
+        render json: @query.errors, staus: :unprocessable_entity
+    end
+
+    @input_text = query_params["input_text"]
+    @text_input_from_query = TextInput.new(:query_id => @query_id, :input_text => @input_text)
+    @text_input_from_query.save
+
+
+    @test_results = Watson.watson_query(@input_text)
+    @sentiment = @test_results["emotion"]["document"]["emotion"]
+    # render json: @sentiment
+
+    @sadness = @sentiment["sadness"]
+    @joy = @sentiment["joy"]
+    @fear = @sentiment["fear"]
+    @disgust = @sentiment["disgust"]
+    @anger = @sentiment["anger"]
+    # @query_to_archive = SongArchive.find_by_sql('SELECT song, artist, (ABS(sadness - #{@sadness}) + ABS(joy - #{@joy}) + ABS(fear - #{@fear}) + ABS(disgust - #{@disgust}) + ABS(anger - #{@anger})) AS difference FROM song_archives ORDER BY difference ASC')
+    @query_to_songs_from_archive = SongArchive.select("id, song, artist, (ABS(sadness - '#{@sadness}') + ABS(joy - '#{@joy}') + ABS(fear - '#{@fear}') + ABS(disgust - '#{@disgust}') + ABS(anger - '#{@anger}')) AS difference").order('difference ASC')
+
+    render json: @query_to_songs_from_archive
+
+  end
+
   def show
     set_query
     render json: @query
   end
 
   def create
-    @query = Query.new(query_params)
+    @user_id = query_params["user_id"]
+    @query = Query.new(:user_id => @user_id)
 
     if @query.save
         render json: @query, status: :created, location: @query
@@ -22,8 +59,11 @@ class QueriesController < ApplicationController
     end
   end
 
+
+  #### #check on this
   def update
     set_query
+    # @query = Query.new(:user_id => @user_id)
     if @query.update(query_params)
       redirect_to @query
     else
@@ -43,7 +83,7 @@ class QueriesController < ApplicationController
     end
 
     def query_params
-      params.require(:query).permit(:user_id)
+      params.require(:query).permit(:user_id, :input_text)
     end
 
 end
