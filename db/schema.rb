@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171207172358) do
+ActiveRecord::Schema.define(version: 20171214163930) do
 
   create_table "queries", force: :cascade do |t|
     t.integer "user_id"
@@ -18,10 +18,24 @@ ActiveRecord::Schema.define(version: 20171207172358) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "song_archives", force: :cascade do |t|
+    t.text "song"
+    t.text "artist"
+    t.integer "year"
+    t.text "lyrics"
+    t.float "sadness"
+    t.float "joy"
+    t.float "fear"
+    t.float "disgust"
+    t.float "anger"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "song_results", force: :cascade do |t|
     t.integer "query_id"
     t.text "artist"
-    t.text "song_name"
+    t.text "song"
     t.text "album"
     t.text "ISRC"
     t.datetime "created_at", null: false
