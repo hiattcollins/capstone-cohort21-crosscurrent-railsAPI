@@ -37,9 +37,27 @@ class QueriesController < ApplicationController
     @disgust = @sentiment["disgust"]
     @anger = @sentiment["anger"]
     # @query_to_archive = SongArchive.find_by_sql('SELECT song, artist, (ABS(sadness - #{@sadness}) + ABS(joy - #{@joy}) + ABS(fear - #{@fear}) + ABS(disgust - #{@disgust}) + ABS(anger - #{@anger})) AS difference FROM song_archives ORDER BY difference ASC')
-    @query_to_songs_from_archive = SongArchive.select("id, song, artist, (ABS(sadness - '#{@sadness}') + ABS(joy - '#{@joy}') + ABS(fear - '#{@fear}') + ABS(disgust - '#{@disgust}') + ABS(anger - '#{@anger}')) AS difference").order('difference ASC')
+    @resulting_songs_from_archive = SongArchive.select("id, song, artist, (ABS(sadness - '#{@sadness}') + ABS(joy - '#{@joy}') + ABS(fear - '#{@fear}') + ABS(disgust - '#{@disgust}') + ABS(anger - '#{@anger}')) AS difference").order('difference ASC').limit(5)
 
-    render json: @query_to_songs_from_archive
+    # @song_results_array = JSON.parse(@resulting_songs_from_archive)
+
+    # p @resulting_songs_from_archive
+    # puts @resulting_songs_from_archive
+
+
+    @song_results_to_save = []
+
+    @resulting_songs_from_archive.each do |song|
+      song_hash = Hash.new
+      song_hash["query_id"] = @query_id
+      song_hash["artist"] = song["artist"]
+      song_hash["song"] = song["song"]
+      @song_results_to_save << song_hash
+    end
+
+    @saved_songs = SongResult.create(@song_results_to_save)
+
+    render json: @resulting_songs_from_archive
 
   end
 
