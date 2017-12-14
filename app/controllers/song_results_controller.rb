@@ -4,12 +4,37 @@ class SongResultsController < ApplicationController
 
   def index
     @song_results = SongResult.all
-    render :json @song_results
+    render json: @song_results
   end
+
+  def multi_insert
+    song_input = '[
+    {
+        "query_id": 2,
+        "artist": "mark ronson featuring bruno mars",
+        "song_name": "uptown funk"
+    },
+    {
+        "query_id": 2,
+        "artist": "walk the moon",
+        "song_name": "shut up and dance"
+    },
+    {
+        "query_id": 2,
+        "artist": "fetty wap",
+        "song_name": "trap queen"
+    }]'
+
+    test_multi = JSON.parse(song_input)
+
+    @multi_result = SongResult.create(test_multi)
+
+  end
+
 
   def show
     set_song_result
-    render :json @song_result
+    render json: @song_result
   end
 
   def create
@@ -42,6 +67,7 @@ class SongResultsController < ApplicationController
       @song_result = SongResult.find(params[:id])
     end
 
+    # Note: db will also accept :album and :ISRC, but current data lacks those parameters
     def song_result_params
       params.require(:song_result).permit(:query_id, :artist, :song_name, :album, :ISRC)
     end
