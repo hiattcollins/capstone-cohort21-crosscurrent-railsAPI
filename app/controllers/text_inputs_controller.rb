@@ -33,18 +33,18 @@ class TextInputsController < ApplicationController
     #     render json: @text_input_for_db, staus: :unprocessable_entity
     # end
 
-    incoming_params = text_input_params
+    # incoming_params = text_input_params
     # # render html: incoming_params
     # # parsed_params = JSON.parse(incoming_params)
     # # render json: parsed_params
-    test_text = incoming_params["input_text"]
+    # test_text = incoming_params["input_text"]
     # # render html: test_text
     # # render json: test_text
 
 
-    @test_results = Watson.watson_query(test_text)
-    @sentiment = @test_results["emotion"]["document"]["emotion"]
-    render json: @sentiment
+    # @test_results = Watson.watson_query(test_text)
+    # @sentiment = @test_results["emotion"]["document"]["emotion"]
+    # render json: @sentiment
   end
 
   private
