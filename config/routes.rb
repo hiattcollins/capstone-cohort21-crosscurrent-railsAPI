@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 
   post 'authenticate', to: 'authentication#authenticate'
 
+  post 'register', to: 'authentication#register', as: 'register'
+
   resources :users, :queries, :text_inputs, :song_archives, :song_results
 
 end
