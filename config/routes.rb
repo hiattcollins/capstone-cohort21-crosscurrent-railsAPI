@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get 'multi_insert', to: 'song_results#multi_insert', as: 'multi_insert'
 
+  post 'get_by_user', to: 'queries#get_by_user', as: 'get_by_user'
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   post 'authenticate', to: 'authentication#authenticate'
