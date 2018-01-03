@@ -19,6 +19,10 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
+# Gem for JWT token handling
+gem 'jwt'
+# Gem Simple Command for creating services
+gem 'simple_command'
 
 # Gem for watson API interaction
 gem 'watson-api-client'

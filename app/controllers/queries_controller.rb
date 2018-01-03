@@ -61,6 +61,14 @@ class QueriesController < ApplicationController
 
   end
 
+  def get_by_user
+    @user_id = query_params["user_id"]
+    # @user_query = Query.find_by_sql('SELECT queries.id, queries.user_id, text_inputs.input_text, song_results.artist, song_results.song FROM queries LEFT JOIN text_inputs ON queries.id == text_inputs.query_id LEFT JOIN song_results ON queries.id == song_results.query_id WHERE queries.user_id == 6')
+    # @user_query = Query.joins(:song_results).where('queries.user_id = "#{@user_id}"')
+    @user_query = Query.joins(:text_inputs).where(:user_id => @user_id)
+    render json: @user_query
+  end
+
   def show
     set_query
     render json: @query
