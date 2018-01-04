@@ -39,6 +39,8 @@ class QueriesController < ApplicationController
     # @query_to_archive = SongArchive.find_by_sql('SELECT song, artist, (ABS(sadness - #{@sadness}) + ABS(joy - #{@joy}) + ABS(fear - #{@fear}) + ABS(disgust - #{@disgust}) + ABS(anger - #{@anger})) AS difference FROM song_archives ORDER BY difference ASC')
     @resulting_songs_from_archive = SongArchive.select("id, song, artist, (ABS(sadness - '#{@sadness}') + ABS(joy - '#{@joy}') + ABS(fear - '#{@fear}') + ABS(disgust - '#{@disgust}') + ABS(anger - '#{@anger}')) AS difference").order('difference ASC').limit(5)
 
+    p "@resulting_songs_from_archive:"
+    p @resulting_songs_from_archive
     # @song_results_array = JSON.parse(@resulting_songs_from_archive)
 
     # p @resulting_songs_from_archive
@@ -65,12 +67,107 @@ class QueriesController < ApplicationController
     @user_id = query_params["user_id"]
     # @user_query = Query.find_by_sql('SELECT queries.id, queries.user_id, text_inputs.input_text, song_results.artist, song_results.song FROM queries LEFT JOIN text_inputs ON queries.id == text_inputs.query_id LEFT JOIN song_results ON queries.id == song_results.query_id WHERE queries.user_id == 6')
     # @user_query = Query.joins(:song_results).where('queries.user_id = "#{@user_id}"')
-    @user_query = Query.joins(:text_inputs, :song_results).where(:user_id => @user_id).select("queries.id, queries.user_id, text_inputs.input_text, song_results.artist, song_results.song")  #.group("queries.id")
+    @query_results_by_user = Query.joins(:text_inputs, :song_results).where(:user_id => @user_id).select("queries.id, queries.user_id, text_inputs.input_text, song_results.artist, song_results.song")  #.group("queries.id")
+
+    @query_results_array = Array.new
+
+    @query_results_by_user.each do |query_result|
+      query_hash = {
+                    :id => query_result[:id],
+                    :input_text => query_result[:input_text],
+                    :song_results => {:artist => query_result[:artist], :song => query_result[:song]}
+                    }
+      @query_results_array << query_hash
+
+    end
+
+    # Create array to hold hashes for each search
+    # Each hash will hold the search id, the input text, and the resulting songs
+    @queries_with_songs = Array.new
+
+    p "@query_results_by_user:"
+    p @query_results_by_user
+    p @query_results_by_user.class
+    p "@query_results_array:"
+    p @query_results_array
+    p @query_results_array.class
+    p "@queries_with_songs:"
+    p @queries_with_songs
+    p @queries_with_songs.class
 
 
 
+    # # Create the first search hash from the first element from @query_results_by_user
+    # first_result = @query_results_by_user[0]
+    # query_hash = {"id" => first_result["id"],
+    #                   "input_text" => first_result["input_text"],
+    #                   "song_results" => [{"artist" => first_result["artist"], "song" => first_result["song"]}]}
+    # @queries_with_songs << query_hash
+    # # Delete first element from @query_results_by_user
 
-    render json: @user_query
+
+
+    @query_results_array.each do |query_result|
+
+      if @queries_with_songs[0] == nil
+        query_hash = {
+                      :id => query_result[:id],
+                      :input_text => query_result[:input_text],
+                      :song_results => [query_result[:song_results]]
+                    }
+
+        p "query hash at beginning:"
+        p query_hash
+        p query_hash.class
+
+        @queries_with_songs.push(query_hash)
+
+        p "@queries_with_songs after first add:"
+        p @queries_with_songs
+        p @queries_with_songs.class
+        # p "@queries_with_songs[0][:id]:"
+        # p @queries_with_songs[0][:id]
+        # p @queries_with_songs[0][:id].class
+        # puts @queries_with_songs[0][:id]
+        # p @queries_with_songs[:id]
+      else
+        p "in else, query_result:"
+        p query_result
+
+        query_result_id = query_result[:id]
+        p "query_result_id:"
+        p query_result_id
+        p query_result_id.class
+
+
+        @existing_query_index = @queries_with_songs.find_index{|query| query[:id] == query_result[:id]}
+        p "@queries_with_songs.find_index:"
+        p @queries_with_songs.find_index{|query| query[:id] == query_result[:id]}
+        p "@existing_query_index"
+        p @existing_query_index
+
+        # @queries_with_songs << existing_query_index
+        # @queries_with_songs.push(existing_query_index)
+
+        if @existing_query_index
+          # id_of_query = query_result[:id]
+          # song_and_artist = {"artist" => query_result["artist"], "song" => query_result["song"]}
+          @queries_with_songs[@existing_query_index][:song_results] << query_result[:song_results]
+        else
+          query_hash = {
+                      :id => query_result[:id],
+                      :input_text => query_result[:input_text],
+                      :song_results => [query_result[:song_results]]
+                      }
+          @queries_with_songs << query_hash
+        end
+        # @queries_with_songs << existing_query_index
+      end
+
+    end
+
+
+    render json: @queries_with_songs  #
   end
 
   def show
