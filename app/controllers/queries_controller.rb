@@ -71,15 +71,15 @@ class QueriesController < ApplicationController
 
     @query_results_array = Array.new
 
-    @query_results_by_user.each do |query_result|
-      query_hash = {
-                    :id => query_result[:id],
-                    :input_text => query_result[:input_text],
-                    :song_results => {:artist => query_result[:artist], :song => query_result[:song]}
-                    }
-      @query_results_array << query_hash
+    # @query_results_by_user.each do |query_result|
+    #   query_hash = {
+    #                 :id => query_result[:id],
+    #                 :input_text => query_result[:input_text],
+    #                 :song_results => {:artist => query_result[:artist], :song => query_result[:song]}
+    #                 }
+    #   @query_results_array << query_hash
 
-    end
+    # end
 
     # Create array to hold hashes for each search
     # Each hash will hold the search id, the input text, and the resulting songs
@@ -107,13 +107,14 @@ class QueriesController < ApplicationController
 
 
 
-    @query_results_array.each do |query_result|
+    @query_results_by_user.each do |query_result|
 
       if @queries_with_songs[0] == nil
         query_hash = {
                       :id => query_result[:id],
                       :input_text => query_result[:input_text],
-                      :song_results => [query_result[:song_results]]
+                      # :song_results => [query_result[:song_results]]
+                      :song_results => [{:artist => query_result[:artist], :song => query_result[:song]}]
                     }
 
         p "query hash at beginning:"
@@ -151,13 +152,13 @@ class QueriesController < ApplicationController
 
         if @existing_query_index
           # id_of_query = query_result[:id]
-          # song_and_artist = {"artist" => query_result["artist"], "song" => query_result["song"]}
-          @queries_with_songs[@existing_query_index][:song_results] << query_result[:song_results]
+          # song_and_artist = {:artist => query_result[:artist], :song => query_result[:song]}
+          @queries_with_songs[@existing_query_index][:song_results] << {:artist => query_result[:artist], :song => query_result[:song]}  #query_result[:song_results]
         else
           query_hash = {
                       :id => query_result[:id],
                       :input_text => query_result[:input_text],
-                      :song_results => [query_result[:song_results]]
+                      :song_results => [{:artist => query_result[:artist], :song => query_result[:song]}]
                       }
           @queries_with_songs << query_hash
         end
