@@ -38,9 +38,9 @@ ActiveRecord::Schema.define(version: 20180104211748) do
     t.text "song"
     t.text "album"
     t.text "ISRC"
+    t.float "difference"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "difference"
   end
 
   create_table "text_inputs", force: :cascade do |t|

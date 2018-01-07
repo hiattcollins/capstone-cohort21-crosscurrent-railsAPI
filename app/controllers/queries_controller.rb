@@ -15,8 +15,6 @@ class QueriesController < ApplicationController
     @query_id = nil
 
     if @query.save
-        # render json: @query, status: :created, location: @query
-        # query_hash = JSON.parse(@query)
         @query_id = @query["id"]
       else
         render json: @query.errors, staus: :unprocessable_entity
