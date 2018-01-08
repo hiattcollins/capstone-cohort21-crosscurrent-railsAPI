@@ -7,7 +7,7 @@ namespace :songarchive do
   desc "Import song archive records from CSV into app database"
   task import_csv: :environment do
 
-    CSV.foreach('*/db/csv/billboard_1965_to_2015_analyzed.csv', headers: true) do |row|
+    CSV.foreach('./db/csv/billboard_1965_to_2015_analyzed.csv', headers: true) do |row|
       SongArchive.create(row.to_h)
     end
 
