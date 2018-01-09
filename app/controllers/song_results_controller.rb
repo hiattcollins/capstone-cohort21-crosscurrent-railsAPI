@@ -1,36 +1,9 @@
 class SongResultsController < ApplicationController
 
-  # index, show, new, edit, create, update and destroy
-
   def index
     @song_results = SongResult.all
     render json: @song_results
   end
-
-  def multi_insert
-    song_input = '[
-    {
-        "query_id": 2,
-        "artist": "mark ronson featuring bruno mars",
-        "song_name": "uptown funk"
-    },
-    {
-        "query_id": 2,
-        "artist": "walk the moon",
-        "song_name": "shut up and dance"
-    },
-    {
-        "query_id": 2,
-        "artist": "fetty wap",
-        "song_name": "trap queen"
-    }]'
-
-    test_multi = JSON.parse(song_input)
-
-    @multi_result = SongResult.create(test_multi)
-
-  end
-
 
   def show
     set_song_result
